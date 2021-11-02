@@ -12,7 +12,7 @@
 %}
 
 DIGIT   [0-9]
-STRING  \".*\"|\'.*\'
+STRING \"[^"]*\"|\'[^']*\'
 LETTER  [a-zA-Z]
 ALPHA_NUMERIC   [a-zA-Z_0-9]
 

@@ -101,14 +101,14 @@ equality_expression: equality_expression OP_COLON_EQ relational_expression
     |relational_expression
     ;
 
-unary_xepression: PLUS_PLUS unary_expression {$$ = new UnaryExpr(INCREMENT, $2, yylineno);}
-                | MINUS_MINUS unary_expression {$$ = new UnaryExpr(DECREMENT, $2, yylineno);}
-                | NOT unary_expression  {$$ = new UnaryExpr(NOT, $2, yylineno);}
+unary_expression: PLUS_PLUS unary_expression 
+                | MINUS_MINUS unary_expression 
+                | NOT unary_expression  
                 ;
 
-multiplicative_expression: multiplicative_expression '*' unary_expression { $$ = new MulExpr($1, $3, yylineno); }
-      | multiplicative_expression '/' unary_expression { $$ = new DivExpr($1, $3, yylineno); }
-      | unary_expression {$$ = $1;}
+multiplicative_expression: multiplicative_expression '*' unary_expression 
+      | multiplicative_expression '/' unary_expression 
+      | unary_expression 
       ;
 
 additive_expression:  additive_expression '+' multiplicative_expression

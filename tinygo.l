@@ -3,12 +3,8 @@
 %x comment
 
 %{
-
-    #include <stdio.h>
-    #include "main.cpp"
     #include "tokens.h"
-    int yylval;
-
+    extern int yylval;
 %}
 
 DIGIT   [0-9]

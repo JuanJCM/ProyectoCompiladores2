@@ -17,7 +17,8 @@
 %token OP_COLON_EQ OPEN_PAR CLOSE_PAR OPEN_BRACES CLOSE_BRACES OPEN_BRACKET CLOSE_BRACKET
 %token OP_COMMA OP_EXCLAMATION_EQ OP_PLUS_PLUS OP_MINUS_MINUS OP_EXCLAMATION
 %token OP_GREATER_THAN OP_LESS_THAN
-%token KW_FOR KW_IF
+%token KW_FOR KW_IF KW_RETURN KW_CONTINUE KW_BREAK
+%token OP_DIV OP_MULT OP_GREATER_THAN_EQ OP_LESS_THAN_EQ OP_PLUS OP_MINUS
 %%
 input: input external_declaration
     |external_declaration
@@ -73,8 +74,8 @@ statement_list: statement_list statement
     |statement
     ;
 statement: for_statement
-    | if_statement
-    | jump_statement
+    |if_statement
+    |jump_statement
     |expression_statement
     |block_statement
     ;
@@ -87,7 +88,9 @@ if_statement: KW_IF expression statement
     ;
 for_statement: KW_FOR expression_statement
     ;
-jump_statement:
+jump_statement: KW_RETURN
+    |KW_CONTINUE
+    |KW_BREAK
     ;
 expression_statement:expression
     ;
@@ -108,19 +111,21 @@ unary_expression: OP_PLUS_PLUS unary_expression
                 | OP_EXCLAMATION unary_expression  
                 ;
 
-multiplicative_expression: multiplicative_expression '*' unary_expression 
-      | multiplicative_expression '/' unary_expression 
+multiplicative_expression: multiplicative_expression OP_MULT unary_expression 
+      | multiplicative_expression OP_DIV unary_expression 
       | unary_expression 
       ;
 
-additive_expression:  additive_expression '+' multiplicative_expression
-                    | additive_expression '-' multiplicative_expression 
+additive_expression:  additive_expression OP_PLUS multiplicative_expression
+                    | additive_expression OP_MINUS multiplicative_expression 
                     | multiplicative_expression 
                     ;
 
 relational_expression: relational_expression OP_GREATER_THAN additive_expression 
                      | relational_expression OP_LESS_THAN additive_expression 
-                     | relational_expression GREATER_OR_EQUAL additive_expression 
-                     | relational_expression LESS_OR_EQUAL additive_expression 
+                     | relational_expression OP_GREATER_THAN_EQ additive_expression 
+                     | relational_expression OP_LESS_THAN_EQ additive_expression 
                      | additive_expression 
                      ;
+expression: assignment_expression
+;

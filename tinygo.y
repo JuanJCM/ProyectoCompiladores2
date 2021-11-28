@@ -1,7 +1,3 @@
-%code requires{
-
-}
-
 %{
     #include <iostream>
     #include <cstdio>
@@ -11,11 +7,8 @@
     void yyerror(const char *msg) {
         printf("Error at line: %d, error: %s\n", yylineno, msg);
     }
+    #define YYERROR_VERBOSE 1
 %}
-
-%union{
-
-}
 
 %token OP_PLUS OP_PLUS_EQ OP_PLUS_PLUS
 %token OP_MINUS OP_MINUS_EQ OP_MINUS_MINUS

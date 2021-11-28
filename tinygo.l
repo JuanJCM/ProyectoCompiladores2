@@ -3,6 +3,7 @@
 %x comment
 
 %{
+    #include <stdio.h>
     #include "tokens.h"
     extern int yylval;
 %}

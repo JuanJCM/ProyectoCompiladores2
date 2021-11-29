@@ -27,26 +27,44 @@
 %token KW_BREAK KW_FUNC KW_ELSE KW_PACKAGE KW_IF KW_CONTINUE
 %token KW_FOR KW_IMPORT KW_RETURN KW_VAR KW_TRUE KW_FALSE
 %token TK_IDENT TK_NUMBER TK_FLOAT32 TK_STRING
+%token KW_PRINT
 
 %%
-input: input external_declaration
+input:start_input input external_declaration { printf("Finished Parsing\n"); }
     |external_declaration
     ;
 
-external_declaration: method_definition
-    |declaration
+start_input: KW_PACKAGE TK_IDENT KW_IMPORT TK_STRING { printf("Start input\n"); }
     ;
+
+external_declaration: method_definition { printf("External declaration\n"); }
+    |declaration_list
+    |
+    ;
+    
 
 method_definition: KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR type  block_statement 
     | KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR  block_statement 
     | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR type  block_statement 
-    | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR block_statement 
-    ;
-declaration_list: declaration_list declaration
-    | declaration
+    | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR block_statement { printf("This statement\n"); }
     ;
 
-declaration: type init_declarator_list
+declaration_list: declaration_list declaration { printf("Declaration list\n"); }
+    | declaration { printf("Declaration list -> declaration\n"); }
+    |
+    ;
+
+declaration: KW_VAR TK_IDENT OP_EQ TK_STRING { printf("Declaration -> string\n"); }
+    | KW_VAR TK_IDENT OP_EQ TK_NUMBER { printf("Declaration -> number\n"); }
+    | KW_VAR TK_IDENT OP_EQ bool    { printf("Declaration -> bool\n"); }
+    | KW_VAR TK_IDENT type
+    | KW_VAR TK_IDENT type OP_EQ TK_NUMBER
+    | print_statement
+    | TK_IDENT OP_COLON_EQ TK_STRING
+    ;
+
+bool: KW_TRUE
+    | KW_FALSE 
     ;
 
 type: DTYPE_INT
@@ -61,13 +79,16 @@ init_declarator_list: init_declarator_list OP_COMMA init_declarator_list
 init_declarator: declarator
     |declarator OP_COLON_EQ initializer
     ;
+
 declarator: TK_IDENT
     |TK_IDENT OP_OPEN_BRACKET assignment_expression OP_CLOSE_BRACKET
     |TK_IDENT OP_OPEN_BRACKET OP_CLOSE_BRACKET
     ;
+
 parameters_type_list: parameters_type_list OP_COMMA parameter_declaration
     | parameter_declaration
     ;
+
 parameter_declaration: type declarator
     | OP_OPEN_BRACKET OP_CLOSE_BRACKET type
     ;
@@ -75,22 +96,67 @@ parameter_declaration: type declarator
 initializer: assignment_expression
     ;
 
-block_statement: OP_OPEN_BRACES statement_list OP_CLOSE_BRACES
+block_statement: OP_OPEN_BRACES statement_list OP_CLOSE_BRACES { printf("Block statement\n"); }
     |
     ;
-statement_list: statement_list statement
-    |statement
+
+statement_list: statement_list statement { printf("Statement list\n"); }
+    |statement { printf("Statement list -> statement\n"); }
     ;
+
 statement: for_statement
     |if_statement
     |jump_statement
     |expression_statement
-    |block_statement
+    |assignation_statement
+    |print_statement { printf("Statement -> print\n"); }
     ;
-assignment_expression:unary_expression assignment_expression
+assignation_statement: declaration
+    ;
+print_statement: TK_IDENT '.' KW_PRINT OP_OPEN_PAR print_list OP_CLOSE_PAR { printf("Print Statement 2\n"); }
+    ;
+
+print_list: print_list expression print_extra
+    | print_list TK_STRING print_extra
+    | print_list bool print_extra
+    | print_list TK_IDENT print_extra
+    | 
+    ;
+
+print_extra:
+    | OP_COMMA decl_types
+    | OP_PLUS decl_types
+    ;
+
+decl_types: TK_STRING
+    | TK_IDENT
+    | TK_FLOAT32
+    | TK_NUMBER
+    | bool
+    ;
+
+assignment_expression: unary_expression assignment_expression
     |logical_or_expression
     ;
 
+postfix_expression: primary_expression
+                |postfix_expression OP_OPEN_BRACKET expression OP_CLOSE_BRACKET
+                |postfix_expression OP_OPEN_PAR OP_CLOSE_PAR
+                |postfix_expression OP_OPEN_PAR argument_expression_list OP_CLOSE_PAR
+                |postfix_expression OP_PLUS_PLUS
+                |postfix_expression OP_MINUS_MINUS
+    ;
+primary_expression: OP_OPEN_PAR expression OP_CLOSE_PAR
+    | TK_IDENT
+    |constant
+    | TK_STRING
+    ;
+constant: TK_IDENT
+    | TK_FLOAT32
+    ;
+argument_expression_list: argument_expression_list OP_SEMICOLON assignment_expression
+    | assignment_expression
+    ;
 
 if_statement: KW_IF expression statement
     ;
@@ -111,7 +177,10 @@ logical_and_expression: logical_and_expression
 
 equality_expression: equality_expression OP_COLON_EQ relational_expression
     |equality_expression OP_EXCLAMATION_EQ relational_expression
+    |equality_expression OP_COLON_EQ KW_TRUE
+    |equality_expression OP_COLON_EQ KW_FALSE
     |relational_expression
+    |
     ;
 
 unary_expression: OP_PLUS_PLUS unary_expression 

@@ -34,7 +34,13 @@ input:start_input input external_declaration { printf("Finished Parsing\n"); }
     |external_declaration
     ;
 
-start_input: KW_PACKAGE TK_IDENT KW_IMPORT TK_STRING { printf("Start input\n"); }
+start_input: KW_PACKAGE TK_IDENT import { printf("Start input\n"); }
+    ;
+import: KW_IMPORT TK_STRING
+    | KW_IMPORT OP_OPEN_PAR ident_list OP_CLOSE_PAR
+    ;
+ident_list: TK_STRING ident_list
+    |TK_STRING
     ;
 
 external_declaration: method_definition { printf("External declaration\n"); }
@@ -43,10 +49,10 @@ external_declaration: method_definition { printf("External declaration\n"); }
     ;
     
 
-method_definition: KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR type  block_statement 
-    | KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR  block_statement 
-    | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR type  block_statement 
-    | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR block_statement { printf("This statement\n"); }
+method_definition: KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR type  block_statement { printf("method definition 1"); }
+    | KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR  block_statement { printf("method definition 2"); }
+    | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR type  block_statement { printf("method definition 2"); }
+    | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR block_statement { printf("method definition 4"); }
     ;
 
 declaration_list: declaration_list declaration { printf("Declaration list\n"); }
@@ -61,6 +67,18 @@ declaration: KW_VAR TK_IDENT OP_EQ TK_STRING { printf("Declaration -> string\n")
     | KW_VAR TK_IDENT type OP_EQ TK_NUMBER
     | print_statement
     | TK_IDENT OP_COLON_EQ TK_STRING
+    | TK_IDENT OP_COLON_EQ TK_IDENT '.' TK_IDENT OP_OPEN_PAR print_list OP_CLOSE_PAR optional
+    ;
+
+optional: optional operators
+    | operators
+    ;
+
+operators: OP_PLUS decl_types { printf("operator -> plus"); }
+    | OP_MINUS decl_types
+    | OP_DIV decl_types
+    | OP_MULT decl_types
+    |
     ;
 
 bool: KW_TRUE
@@ -125,7 +143,7 @@ print_list: print_list expression print_extra
 
 print_extra:
     | OP_COMMA decl_types
-    | OP_PLUS decl_types
+    | OP_COMMA expression
     ;
 
 decl_types: TK_STRING
@@ -148,44 +166,53 @@ postfix_expression: primary_expression
     ;
 primary_expression: OP_OPEN_PAR expression OP_CLOSE_PAR
     | TK_IDENT
-    |constant
+    | constant
     | TK_STRING
     ;
 constant: TK_IDENT
     | TK_FLOAT32
+    | TK_NUMBER
     ;
 argument_expression_list: argument_expression_list OP_SEMICOLON assignment_expression
     | assignment_expression
     ;
 
-if_statement: KW_IF expression statement
+if_statement: KW_IF expression_list OP_OPEN_BRACKET statement_list OP_CLOSE_BRACKET 
     ;
-for_statement: KW_FOR expression_statement
+for_statement: KW_FOR expression_list OP_OPEN_BRACKET statement_list OP_CLOSE_BRACKET
     ;
 jump_statement: KW_RETURN
     |KW_CONTINUE
     |KW_BREAK
     ;
-expression_statement:expression
+expression_list: expression OP_SEMICOLON expression_list
+    |expression OP_AND_AND expression_list
+    |expression OP_PIPE_PIPE expression_list
+    |expression
     ;
+    
+expression_statement: expression {printf( "Expression statement" );}
+    ;
+
 logical_or_expression: logical_or_expression
     |logical_and_expression
     ;
+
 logical_and_expression: logical_and_expression
     |equality_expression
     ;
 
 equality_expression: equality_expression OP_COLON_EQ relational_expression
     |equality_expression OP_EXCLAMATION_EQ relational_expression
-    |equality_expression OP_COLON_EQ KW_TRUE
-    |equality_expression OP_COLON_EQ KW_FALSE
+    |equality_expression OP_COLON_EQ bool
     |relational_expression
     |
     ;
 
 unary_expression: OP_PLUS_PLUS unary_expression 
                 | OP_MINUS_MINUS unary_expression 
-                | OP_EXCLAMATION unary_expression  
+                | OP_EXCLAMATION unary_expression 
+                | postfix_expression
                 ;
 
 multiplicative_expression: multiplicative_expression OP_MULT unary_expression 
@@ -193,16 +220,16 @@ multiplicative_expression: multiplicative_expression OP_MULT unary_expression
       | unary_expression 
       ;
 
-additive_expression:  additive_expression OP_PLUS multiplicative_expression
-                    | additive_expression OP_MINUS multiplicative_expression 
-                    | multiplicative_expression 
+additive_expression:  additive_expression OP_PLUS multiplicative_expression { printf("Add expression =>  PLUS Expr"); }
+                    | additive_expression OP_MINUS multiplicative_expression { printf("Add expresison => SUB Expr"); }
+                    | multiplicative_expression { printf("Add expression => mult expr"); }
                     ;
 
 relational_expression: relational_expression OP_GREATER_THAN additive_expression 
                      | relational_expression OP_LESS_THAN additive_expression 
                      | relational_expression OP_GREATER_THAN_EQ additive_expression 
                      | relational_expression OP_LESS_THAN_EQ additive_expression 
-                     | additive_expression 
+                     | additive_expression { printf("relation expr => add expr"); }
                      ;
 expression: assignment_expression
 ;

@@ -130,8 +130,10 @@ statement: for_statement
     |assignation_statement
     |print_statement { printf("Statement -> print\n"); }
     ;
+
 assignation_statement: declaration
     ;
+    
 print_statement: TK_IDENT '.' KW_PRINT OP_OPEN_PAR print_list OP_CLOSE_PAR { printf("Print Statement 2\n"); }
     ;
 
@@ -180,6 +182,11 @@ argument_expression_list: argument_expression_list OP_SEMICOLON assignment_expre
     ;
 
 if_statement: KW_IF expression_list OP_OPEN_BRACES statement_list OP_CLOSE_BRACES 
+    |KW_IF expression_list OP_OPEN_BRACES statement_list OP_CLOSE_BRACES else_statement
+    ;
+
+else_statement:KW_ELSE if_statement
+    |KW_ELSE OP_OPEN_BRACES statement_list OP_CLOSE_BRACES
     ;
 
 for_statement: KW_FOR expression_list OP_OPEN_BRACES statement_list OP_CLOSE_BRACES  

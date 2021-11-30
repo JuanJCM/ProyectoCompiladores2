@@ -66,8 +66,9 @@ declaration: KW_VAR TK_IDENT OP_EQ TK_STRING { printf("Declaration -> string\n")
     | KW_VAR TK_IDENT type
     | KW_VAR TK_IDENT type OP_EQ TK_NUMBER
     | print_statement
-    | TK_IDENT OP_COLON_EQ TK_STRING
+    | TK_IDENT OP_COLON_EQ decl_types
     | TK_IDENT OP_COLON_EQ TK_IDENT '.' TK_IDENT OP_OPEN_PAR print_list OP_CLOSE_PAR optional
+    |TK_IDENT OP_EQ expression
     ;
 
 optional: optional operators
@@ -178,10 +179,11 @@ argument_expression_list: argument_expression_list OP_SEMICOLON assignment_expre
     | assignment_expression
     ;
 
-if_statement: KW_IF expression_list OP_OPEN_BRACKET statement_list OP_CLOSE_BRACKET 
+if_statement: KW_IF expression_list OP_OPEN_BRACES statement_list OP_CLOSE_BRACES 
     ;
 
-for_statement: KW_FOR expression_list OP_OPEN_BRACKET statement_list OP_CLOSE_BRACKET
+for_statement: KW_FOR expression_list OP_OPEN_BRACES statement_list OP_CLOSE_BRACES  
+    | KW_FOR OP_OPEN_BRACES statement_list OP_CLOSE_BRACES
     ;
 
 jump_statement: KW_RETURN
@@ -215,6 +217,8 @@ equality_expression: equality_expression OP_COLON_EQ relational_expression
 
 compare_expression: OP_AND_AND compare_expression
     | OP_PIPE_PIPE compare_expression
+    |OP_PERCENT compare_expression
+    | OP_EQ_EQ compare_expression
     | postfix_expression
     ;
 

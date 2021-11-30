@@ -146,11 +146,10 @@ print_extra:
     | OP_COMMA expression
     ;
 
-decl_types: TK_STRING
-    | TK_IDENT
-    | TK_FLOAT32
-    | TK_NUMBER
+decl_types:TK_IDENT
+    |TK_STRING
     | bool
+    |TK_NUMBER
     ;
 
 assignment_expression: unary_expression assignment_expression
@@ -164,27 +163,32 @@ postfix_expression: primary_expression
                 |postfix_expression OP_PLUS_PLUS
                 |postfix_expression OP_MINUS_MINUS
     ;
+
 primary_expression: OP_OPEN_PAR expression OP_CLOSE_PAR
-    | TK_IDENT
     | constant
-    | TK_STRING
     ;
+
 constant: TK_IDENT
     | TK_FLOAT32
     | TK_NUMBER
+    | bool
     ;
+
 argument_expression_list: argument_expression_list OP_SEMICOLON assignment_expression
     | assignment_expression
     ;
 
 if_statement: KW_IF expression_list OP_OPEN_BRACKET statement_list OP_CLOSE_BRACKET 
     ;
+
 for_statement: KW_FOR expression_list OP_OPEN_BRACKET statement_list OP_CLOSE_BRACKET
     ;
+
 jump_statement: KW_RETURN
     |KW_CONTINUE
     |KW_BREAK
     ;
+
 expression_list: expression OP_SEMICOLON expression_list
     |expression OP_AND_AND expression_list
     |expression OP_PIPE_PIPE expression_list
@@ -209,10 +213,15 @@ equality_expression: equality_expression OP_COLON_EQ relational_expression
     |
     ;
 
+compare_expression: OP_AND_AND compare_expression
+    | OP_PIPE_PIPE compare_expression
+    | postfix_expression
+    ;
+
 unary_expression: OP_PLUS_PLUS unary_expression 
                 | OP_MINUS_MINUS unary_expression 
-                | OP_EXCLAMATION unary_expression 
-                | postfix_expression
+                | OP_EXCLAMATION unary_expression
+                | compare_expression
                 ;
 
 multiplicative_expression: multiplicative_expression OP_MULT unary_expression 

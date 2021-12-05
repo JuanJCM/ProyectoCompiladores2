@@ -49,11 +49,10 @@ external_declaration: method_definition { printf("External declaration\n"); }
     ;
     
 
-method_definition: KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR OP_OPEN_BRACKET OP_CLOSE_BRACKET type  block_statement { printf("method definition 1\n"); }
-    | KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR  block_statement { printf("method definition 2\n"); }
-    | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR type  block_statement { printf("method definition 2\n"); }
+method_definition: KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR OP_OPEN_BRACKET OP_CLOSE_BRACKET brackets type  block_statement { printf("method definition 1\n"); }
+    | KW_FUNC TK_IDENT OP_OPEN_PAR parameters_type_list OP_CLOSE_PAR block_statement { printf("method definition 2\n"); }
+    | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR brackets type  block_statement { printf("method definition 2\n"); }
     | KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR block_statement { printf("method definition 4\n"); }
-    |KW_FUNC TK_IDENT OP_OPEN_PAR OP_CLOSE_PAR OP_OPEN_BRACKET OP_CLOSE_BRACKET type  block_statement { printf("method definition 2\n"); }
     ;
 
 declaration_list: declaration_list declaration { printf("Declaration list\n"); }
@@ -93,11 +92,13 @@ optional: optional operators
     | operators
     ;
 
-operators: OP_PLUS decl_types { printf("operator -> plus\n"); }
-    | OP_MINUS decl_types
-    | OP_DIV decl_types
-    | OP_MULT decl_types
+operators: optional_operands decl_types { printf("operator -> plus\n"); }
     |
+    ;
+optional_operands: OP_PLUS 
+    | OP_MINUS
+    | OP_DIV
+    | OP_MULT 
     ;
 
 bool: KW_TRUE

@@ -4,6 +4,9 @@
 
 using namespace std;
 
+class Statement; 
+
+typedef list<Statement *> StatementList;
 enum StatementKind
 {
     FOR_STATEMENT,
@@ -26,7 +29,7 @@ enum UnaryType
     NOT
 };
 
-class Statment{
+class Statement{
     public:
         int line;
         virtual int evaluateSemantic() = 0;
@@ -46,6 +49,33 @@ class name##Expr : public BinaryExpr{\
         Type getType();\
 
 
+};
+
+class Declarator{
+    public
+        Declarator(string id, Expr* arrayDeclaration, bool isArray, int line){
+            this->id = id;
+            this->arrayDeclaration = arrayDeclaration;
+            this-> isArray = isArray;
+            this->line = line;
+        }
+        string id;
+        Expr *arrayDeclaration;
+        bool isArray;
+        int line;
+};
+
+class BlockStatement : public Statement{
+    public:
+        BlockStatement(StatementList statements, int line ){
+
+        }
+        StatementList statement;
+        int line;
+        int evaluateSemantic();
+        StatementKind getKind(){
+            return BLOCK_STATEMENT;
+        }
 };
 
 IMPLEMENT_BINARY_EXPR(Add);

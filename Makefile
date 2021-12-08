@@ -1,19 +1,22 @@
 TARGET = tinygo
-all:	${TARGET}
+all: ${TARGET}
 
-${TARGET}: ${TARGET}_parser.o ${TARGET}_lexer.o main.o
+${TARGET}: ast.o ${TARGET}_parser.o ${TARGET}_lexer.o main.o
 	g++ -g -o $@ $^
-
-main.o: main.cpp
+	
+ast.o: ast.cpp ast.h
 	g++ -g -c -o $@ $<
 
-${TARGET}_lexer.o:	${TARGET}_lexer.cpp
+main.o:	main.cpp
+	g++ -g -c -o $@ $<
+	
+${TARGET}_lexer.o: ${TARGET}_lexer.cpp
 	g++ -g -c -o $@ $<
 
-${TARGET}_lexer.cpp:	${TARGET}.l
+${TARGET}_lexer.cpp:  ${TARGET}.l
 	flex -o $@ $<
 
-${TARGET}_parser.cpp: ${TARGET}.y
+${TARGET}_parser.cpp: ${TARGET}.y ast.h
 	bison --defines=tokens.h -o $@ $<
 
 ${TARGET}_parser.o: ${TARGET}_parser.cpp
@@ -25,3 +28,4 @@ clean:
 	rm -f  ${TARGET}_parser.cpp
 	rm -f  ${TARGET}
 	rm -f tokens.h
+	

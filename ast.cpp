@@ -5,4 +5,4 @@ class Context{
     public:
         struct ContextStack* prev;
         map<string, Type> variables;
-}
+};

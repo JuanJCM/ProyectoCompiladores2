@@ -4,9 +4,13 @@
 
 using namespace std;
 
-class Statement; 
+class Statement;
+class Expr;
+class Declarator;
+class Statement;
 
 typedef list<Statement *> StatementList;
+
 enum StatementKind
 {
     FOR_STATEMENT,
@@ -20,6 +24,13 @@ enum StatementKind
     FUNCTION_DEFINITION_STATEMENT,
     GLOBAL_DECLARATION_STATEMENT,
     ELSE_STATEMENT
+};
+
+enum Type {
+    FLOAT32,
+    INT,
+    STRING,
+    BOOL
 };
 
 enum UnaryType
@@ -41,18 +52,27 @@ class Expr{
         int line;
         virtual Type getType() = 0;
 };
+class BinaryExpr : public Expr{
+    public:
+        BinaryExpr(Expr * expr1, Expr *expr2, int line){
+            this->expr1 = expr1;
+            this->expr2 = expr2;
+            this->line = line;
+        }
+        Expr * expr1;
+        Expr *expr2;
+        int line;
+};
 
 #define IMPLEMENT_BINARY_EXPR(name)\
 class name##Expr : public BinaryExpr{\
     public:\
-        name##Expr(Expr * expr1, Expr *expr, int line) : BinaryExpr(expr1, expr2, line){}\
+        name##Expr(Expr * expr1, Expr *expr2, int line) : BinaryExpr(expr1, expr2, line){}\
         Type getType();\
-
-
 };
 
 class Declarator{
-    public
+    public:
         Declarator(string id, Expr* arrayDeclaration, bool isArray, int line){
             this->id = id;
             this->arrayDeclaration = arrayDeclaration;

@@ -9,8 +9,8 @@ func main() {
     /*
     Prueba con if
     */
-    var a, b int = 5, 8
-    
+    var a int = 5
+    var b int = 8
     if a%2 == 0 {
         fmt.Println("a is even")
     } else {

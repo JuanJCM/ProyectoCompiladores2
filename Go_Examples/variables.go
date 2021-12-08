@@ -7,7 +7,8 @@ func main() {
     var a = "initial"
     fmt.Println(a)
 
-    var b, c int = 1, 2
+    var b int = 1
+    var c int = 2
     fmt.Println(b, c)
 
     var d = true

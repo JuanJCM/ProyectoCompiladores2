@@ -3,12 +3,9 @@
 %x comment
 
 %{
-
     #include <stdio.h>
-    #include "main.cpp"
     #include "tokens.h"
-    int yylval;
-
+    extern int yylval;
 %}
 
 DIGIT   [0-9]
@@ -73,6 +70,7 @@ ALPHA_NUMERIC   [a-zA-Z_0-9]
 "var"       { return KW_VAR; }
 "true"      { return KW_TRUE; }
 "false"     { return KW_FALSE; }
+"Println"   {return KW_PRINT;}
 {STRING}    { return TK_STRING; }
 {LETTER}({DIGIT}|{ALPHA_NUMERIC}|_)* {return TK_IDENT; }
 {DIGIT}+ { yylval = atoi(yytext); return TK_NUMBER; }

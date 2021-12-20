@@ -3,7 +3,6 @@
 }
 
 %{
-//http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
     #include <cstdio>
     #include "asm.h"
     #include <fstream>
@@ -16,7 +15,6 @@
     void yyerror(const char * s){
         fprintf(stderr, "Line: %d, error: %s\n", yylineno, s);
     }
-
     #define YYERROR_VERBOSE 1
     #define YYDEBUG 1
     #define EQUAL 1
@@ -45,7 +43,6 @@
             case 4:
                 return 8;
         }
-
         return 0;
     }
 
@@ -102,13 +99,13 @@
 
 %%
 start: input {
-   assemblyFile.global = ".globl main";
+    assemblyFile.global = ".globl main";
     assemblyFile.data = ".data\n";
     assemblyFile.text = ".text\n";
     list<Statement *>::iterator it = $1->begin();
     string code;
     while(it != $1->end()){
-        printf("semantic result: %d \n",(*it)->evaluateSemantic());
+        // printf("semantic result: %d \n",(*it)->evaluateSemantic());
         code += (*it)->genCode();
         it++;
     }

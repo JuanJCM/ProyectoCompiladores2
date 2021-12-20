@@ -210,7 +210,6 @@ bool variableExists(string id){
   Type value;
   if(context != NULL){
     value = getLocalVariableType(id);
-    //context->variables[id] != 0
     if(value != 0)
       return true;
   }
@@ -225,7 +224,6 @@ int BlockStatement::evaluateSemantic(){
         if(dec != NULL){
             dec->evaluateSemantic();
         }
-
         itd++;
     }
 
@@ -236,10 +234,8 @@ int BlockStatement::evaluateSemantic(){
         if(stmt != NULL){
             stmt->evaluateSemantic();
         }
-
         its++;
     }
-
     return 0;
 }
 
@@ -253,7 +249,6 @@ string BlockStatement::genCode(){
         if(dec != NULL){
             ss<<dec->genCode()<<endl;
         }
-
         itd++;
     }
 
@@ -264,7 +259,6 @@ string BlockStatement::genCode(){
         if(stmt != NULL){
             ss<<stmt->genCode()<<endl;
         }
-
         its++;
     }
     return ss.str();
@@ -330,7 +324,6 @@ string Declaration::genCode(){
                 releaseIntTemp(exprCode.place);
                 itExpr++;
             }
-            
         }
        it++; 
     }
@@ -366,7 +359,6 @@ string GlobalDeclaration::genCode(){
                 itExpr++;
             }
         }
-
         it++;
     }
 
@@ -388,7 +380,6 @@ void addMethodDeclaration(string id, int line, Type type, ParameterList params){
 int MethodDefinition::evaluateSemantic(){
     addMethodDeclaration(this->id, this->line, this->type, this->params);
     pushContext();
-   
     list<Parameter* >::iterator it = this->params.begin();
     while(it != this->params.end()){
         (*it)->evaluateSemantic();
@@ -398,9 +389,7 @@ int MethodDefinition::evaluateSemantic(){
     if(this->statement !=NULL ){
         this->statement->evaluateSemantic();
     }
-    
     popContext();
-
     return 0;
 }
 
@@ -912,25 +901,20 @@ Type MethodInvocationExpr::getType(){
         }
         return VOID;
     }
-    
-    // cout<<"CHECK 1"<<endl;
     FunctionInfo * func = methods[this->id->id];
     if(func == NULL){
         cout<<"error: function "<<this->id->id<<" not found, line: "<<this->line<<endl;
         exit(0);
     }
-    // cout<<"CHECK 2"<<endl;
     Type funcType = func->returnType;
     if(func->parameters.size() > this->args.size()){
         cout<<"error: to few arguments to function "<<this->id->id<<", line: "<<this->line<<endl;
         exit(0);
     }
-    // cout<<"CHECK 3"<<endl;
     if(func->parameters.size() < this->args.size()){
         cout<<"error: to many arguments to function "<<this->id->id<<", line: "<<this->line<<endl;
         exit(0);
     }
-    // cout<<"CHECK 4"<<endl;
     list<Parameter *>::iterator paramIt = func->parameters.begin();
     list<Expr *>::iterator argsIt =this->args.begin();
     while(paramIt != func->parameters.end() && argsIt != this->args.end()){

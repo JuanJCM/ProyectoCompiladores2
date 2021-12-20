@@ -3,6 +3,7 @@
 #include <map>
 #include <iostream>
 #include "code.h"
+
 using namespace std;
 
 class Expr;
@@ -150,9 +151,7 @@ class CreateVariableStatement : public Statement{
         int line;
         int evaluateSemantic();
         string genCode();
-        StatementKind getKind(){
-            return CREATE_VARS_STATEMENT;
-        }
+        StatementKind getKind(){ return CREATE_VARS_STATEMENT; }
 };
 
 class AssignmentStatement : public Statement{
@@ -245,9 +244,7 @@ class MethodDefinition : public Statement{
         int line;
         int evaluateSemantic();
         string genCode();
-        StatementKind getKind(){
-            return FUNCTION_DEFINITION_STATEMENT;
-        }
+        StatementKind getKind(){ return FUNCTION_DEFINITION_STATEMENT; }
 };
 
 class IntExpr : public Expr{
@@ -426,9 +423,7 @@ class ForsStatement: public Statement{
         int line;
         string genCode();
         int evaluateSemantic();
-        StatementKind getKind(){
-            return FORS_STATEMENT;
-        }
+        StatementKind getKind(){ return FORS_STATEMENT; }
 };
 
 class ForStatement: public Statement{
@@ -447,9 +442,7 @@ class ForStatement: public Statement{
         int line;
         string genCode();
         int evaluateSemantic();
-        StatementKind getKind(){
-            return FOR_STATEMENT;
-        }
+        StatementKind getKind(){ return FOR_STATEMENT; }
 };
 
 class ElseStatement : public Statement{
@@ -465,7 +458,7 @@ class ElseStatement : public Statement{
         Statement * falseStatement;
         string genCode();
         int evaluateSemantic();
-        StatementKind getKind(){return ELSE_STATEMENT;}
+        StatementKind getKind(){ return ELSE_STATEMENT; }
 };
 
 class IfStatement : public Statement{
@@ -479,7 +472,7 @@ class IfStatement : public Statement{
         Statement * trueStatement;
         string genCode();
         int evaluateSemantic();
-        StatementKind getKind(){return IF_STATEMENT;}
+        StatementKind getKind(){ return IF_STATEMENT; }
 };
 
 class ExprStatement : public Statement{
@@ -491,7 +484,7 @@ class ExprStatement : public Statement{
         Expr * expr;
         int evaluateSemantic();
         string genCode();
-        StatementKind getKind(){return EXPRESSION_STATEMENT;}
+        StatementKind getKind(){ return EXPRESSION_STATEMENT; }
 };
 
 class ReturnStatement : public Statement{
@@ -503,7 +496,7 @@ class ReturnStatement : public Statement{
         Expr * expr;
         int evaluateSemantic();
         string genCode();
-        StatementKind getKind(){return RETURN_STATEMENT;}
+        StatementKind getKind(){ return RETURN_STATEMENT; }
 };
 
 class PrintStatement : public Statement{
@@ -515,7 +508,7 @@ class PrintStatement : public Statement{
         Expr * expr;
         int evaluateSemantic();
         string genCode();
-        StatementKind getKind(){return PRINT_STATEMENT;}
+        StatementKind getKind(){ return PRINT_STATEMENT; }
 };
 
 IMPLEMENT_BINARY_EXPR(Add);

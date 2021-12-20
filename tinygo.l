@@ -17,26 +17,26 @@ LETTER [a-zA-Z]
 \"([^\\\"]|\\.)*\"  { yylval.string_t = strdup(yytext); return TK_STRING;}
 {DIGIT}+  { yylval.int_t = atoi(yytext); return TK_INT; }
 {DIGIT}+"."{DIGIT}+  { yylval.float_t = atof(yytext); return TK_FLOAT32; }
-"+" { return OP_ADD; } /*ADD*/
-"-" { return OP_SUB; } /*SUB*/
-"*" { return OP_MUL; } /*MUL*/
-"^" { return OP_CARET; } /*EXP*/
-"/" { return OP_DIV; } /*DIV*/
-"%" { return OP_PERCENT; } /*PERC*/
-"++" { return ADD_ADD; } /*ADDADD*/
-"--" { return SUB_SUB; } /*SUBSUB*/
-"+=" { return ADD_EQUAL; } /*IADD*/
-"-=" { return SUB_EQUAL; } /*ISUB*/
-"*=" { return MUL_EQUAL; } /*IMUL*/
-"^=" { return CARET_EQUAL; } /*IEXP*/
-"/=" { return DIV_EQUAL; } /*IDIV*/
-"%=" { return PERCENT_EQUAL; } /*IPERC*/
-"&=" { return AND_EQUAL; } /*IAND*/
-"&&" { return AND_AND; } /*AND*/
-"|=" { return OR_EQUAL; } /*IOR*/
-"||" { return PIPE_PIPE; } /*OR*/
+"+" { return OP_ADD; }
+"-" { return OP_SUB; }
+"*" { return OP_MUL; }
+"^" { return OP_CARET; }
+"/" { return OP_DIV; }
+"%" { return OP_PERCENT; }
+"++" { return ADD_ADD; }
+"--" { return SUB_SUB; }
+"+=" { return ADD_EQUAL; }
+"-=" { return SUB_EQUAL; }
+"*=" { return MUL_EQUAL; }
+"^=" { return CARET_EQUAL; }
+"/=" { return DIV_EQUAL; }
+"%=" { return PERCENT_EQUAL; }
+"&=" { return AND_EQUAL; }
+"&&" { return AND_AND; }
+"|=" { return OR_EQUAL; }
+"||" { return PIPE_PIPE; }
 "=" { return '='; }
-":=" { return COLON_EQUAL; } /*SHORT*/
+":=" { return COLON_EQUAL; }
 "(" { return '('; }
 ")" { return ')'; }
 "[" { return '['; }
@@ -50,10 +50,10 @@ LETTER [a-zA-Z]
 ">" { return '>'; }
 "<" { return '<'; }
 "." { return '.'; }
-">=" { return GREATER_EQUAL; } /*GET*/
-"<=" { return LESS_EQUAL; } /*LET*/
-"==" { return EQUAL_EQUAL; } /*EQT*/
-"!=" { return EXCLAMATION_EQUAL; } /*DIST*/
+">=" { return GREATER_EQUAL; }
+"<=" { return LESS_EQUAL; }
+"==" { return EQUAL_EQUAL; }
+"!=" { return EXCLAMATION_EQUAL; }
 "break" { return BREAK; }
 "func" { return FUNC; }
 "else" { return ELSE; }
@@ -73,5 +73,5 @@ LETTER [a-zA-Z]
 [a-zA-Z]({DIGIT}|[a-zA-Z_0-9]|_)* { yylval.string_t = strdup(yytext); return TK_ID; }
 [\n] { return EOL; }
 [ \t\r] { }
-. { printf("invalido %d\n", (int)(yytext[0])); }
+. { printf("Invalid token %d\n", (int)(yytext[0])); }
 %%

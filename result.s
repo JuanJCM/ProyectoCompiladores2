@@ -1,0 +1,6 @@
+.data
+
+.globl main
+.text
+
+
